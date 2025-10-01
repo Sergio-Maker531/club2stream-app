@@ -24,5 +24,5 @@ Application prête pour Railway avec détection automatique React + FastAPI.
 - Et 7+ autres clubs mondiaux !
 
 Développé avec ❤️ pour les amoureux de musique électronique.
-
+Updated for deployment - Club2Stream ready!
 
