@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Club2Stream - Live Club Music</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #111827; color: white; }
+        .header { background: #111827; border-bottom: 1px solid rgba(139, 92, 246, 0.3); padding: 16px 20px; }
+        .nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
+        .hero { background: linear-gradient(to right, #581c87, #111827, #be185d); padding: 80px 20px; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .title { font-size: 48px; font-weight: bold; margin-bottom: 32px; background: linear-gradient(to right, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-center { font-size: 120px; margin-bottom: 20px; }
+        .logo-text { font-size: 36px; font-weight: bold; color: #a855f7; margin-bottom: 20px; }
+        .description { font-size: 20px; color: #d1d5db; margin-bottom: 32px; }
+        .search-container { margin-bottom: 32px; }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .search-input { width: 100%; background: #374151; color: white; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; padding: 12px 16px; font-size: 16px; }
+        .search-input:focus { outline: none; border-color: #7c3aed; }
+        .btn-primary { background: linear-gradient(to right, #7c3aed, #ec4899); color: white; font-weight: bold; padding: 16px 32px; border-radius: 8px; font-size: 18px; border: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .clubs-section { padding: 64px 20px; }
+        .clubs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .club-card { background: #1f2937; padding: 24px; border-radius: 12px; border: 1px solid #374151; text-align: center; }
+        .club-flag { font-size: 32px; margin-bottom: 12px; }
+        .club-name { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+        .club-city { color: #9ca3af; margin-bottom: 12px; }
+        .live-badge { display: inline-block; background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px; margin-bottom: 16px; }
+        .btn-listen { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .lang-selector { position: relative; }
+        .lang-btn { background: none; border: none; color: #d1d5db; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .lang-dropdown { position: absolute; right: 0; top: 100%; margin-top: 8px; width: 140px; background: #374151; border: 1px solid #4b5563; border-radius: 6px; display: none; z-index: 50; }
+        .lang-dropdown.show { display: block; }
+        .lang-option { width: 100%; text-align: left; padding: 8px 12px; background: none; border: none; color: #d1d5db; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .lang-option:hover { background: #4b5563; }
+        @media (max-width: 768px) { .title { font-size: 36px; } .logo-center { font-size: 80px; } .search-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav">
+            <a href="#" class="logo">
+                <div style="font-size: 32px;">🎵</div>
+                <h1 style="font-size: 24px; font-weight: bold;">Club2Stream</h1>
+            </a>
+            <div class="lang-selector">
+                <button class="lang-btn" onclick="toggleLang()">
+                    <span id="currentFlag">🇫🇷</span>
+                    <span>▼</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <button class="lang-option" onclick="changeLang('fr', '🇫🇷')">🇫🇷 Français</button>
+                    <button class="lang-option" onclick="changeLang('en', '🇬🇧')">🇬🇧 English</button>
+                    <button class="lang-option" onclick="changeLang('it', '🇮🇹')">🇮🇹 Italiano</button>
+                    <button class="lang-option" onclick="changeLang('es', '🇪🇸')">🇪🇸 Español</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="title" id="welcomeText">Bienvenue chez Club2Stream</h1>
+            <div class="logo-center">🎵</div>
+            <div class="logo-text">Club2Stream</div>
+            <p class="description" id="descText">L'ambiance des meilleurs clubs, en direct, où que vous soyez. Imagine de pouvoir écouter le son en live et te faire une idee reel de la musique, et gooo!!!!</p>
+            
+            <div class="search-container">
+                <div class="search-grid">
+                    <select class="search-input" onchange="searchByGenre(this.value)">
+                        <option value="">🎵 Choisir un genre musical</option>
+                        <option value="Techno">🔊 Techno</option>
+                        <option value="House">🏠 House</option>
+                        <option value="Disco">✨ Disco</option>
+                        <option value="Reggae">🌴 Reggae</option>
+                        <option value="Electro">⚡ Electro</option>
+                    </select>
+                    <select class="search-input" onchange="searchByCity(this.value)">
+                        <option value="">📍 Choisir une destination</option>
+                        <option value="Berlin">🇩🇪 Berlin</option>
+                        <option value="Ibiza">🇪🇸 Ibiza</option>
+                        <option value="New York">🇺🇸 New York</option>
+                        <option value="Kingston">🇯🇲 Kingston</option>
+                        <option value="Tokyo">🇯🇵 Tokyo</option>
+                    </select>
+                </div>
+            </div>
+            
+            <a href="#clubs" class="btn-primary">
+                <span>🎵</span>
+                <span id="listenText">Écouter en direct</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="clubs-section" id="clubs">
+        <div style="text-align: center; margin-bottom: 48px;">
+            <h2 style="font-size: 32px; font-weight: bold;">🌍 Clubs Disponibles</h2>
+        </div>
+        
+        <div class="clubs-grid" id="clubsGrid">
+            <div class="club-card">
+                <div class="club-flag">🇩🇪</div>
+                <h3 class="club-name">Berghain</h3>
+                <p class="club-city">Berlin, Allemagne</p>
+                <div class="live-badge">🔴 LIVE - Techno</div><br>
+                <button class="btn-listen" onclick="playSound('Techno')">🎧 Écouter</button>
+            </div>
+            <div class="club-card">
+                <div class="club-flag">🇪🇸</div>
+                <h3 class="club-name">Pacha</h3>
+                <p class="club-city">Ibiza, Espagne</p>
+                <div class="live-badge">🔴 LIVE - House</div><br>
+                <button class="btn-listen" onclick="playSound('House')">🎧 Écouter</button>
+            </div>
+            <div class="club-card">
+                <div class="club-flag">🇺🇸</div>
+                <h3 class="club-name">Studio 54</h3>
+                <p class="club-city">New York, États-Unis</p>
+                <div class="live-badge">🔴 LIVE - Disco</div><br>
+                <button class="btn-listen" onclick="playSound('Disco')">🎧 Écouter</button>
+            </div>
+            <div class="club-card">
+                <div class="club-flag">🇯🇲</div>
+                <h3 class="club-name">Bob Marley Club</h3>
+                <p class="club-city">Kingston, Jamaïque</p>
+                <div class="live-badge">🔴 LIVE - Reggae</div><br>
+                <button class="btn-listen" onclick="playSound('Reggae')">🎧 Écouter</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const translations = {
+            fr: { welcome: "Bienvenue chez Club2Stream", description: "L'ambiance des meilleurs clubs, en direct, où que vous soyez. Imagine de pouvoir écouter le son en live et te faire une idee reel de la musique, et gooo!!!!", listen: "Écouter en direct" },
+            en: { welcome: "Welcome to Club2Stream", description: "The best club vibes, live, wherever you are. Imagine being able to listen to live sound and get a real idea of the music, let's gooo!!!!", listen: "Listen Live" },
+            it: { welcome: "Benvenuti a Club2Stream", description: "L'atmosfera dei migliori club, dal vivo, ovunque tu sia. Immagina di poter ascoltare il suono dal vivo, andiamo!!!!", listen: "Ascolta dal vivo" },
+            es: { welcome: "Bienvenidos a Club2Stream", description: "El ambiente de los mejores clubs, en directo, donde quiera que estés. Imagina poder escuchar el sonido en vivo, ¡¡¡vamos!!!!", listen: "Escuchar en vivo" }
+        };
+
+        function playSound(genre) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(genre) {
+                case 'Techno': oscillator.frequency.setValueAtTime(130, audioContext.currentTime); oscillator.type = 'sawtooth'; break;
+                case 'House': oscillator.frequency.setValueAtTime(220, audioContext.currentTime); oscillator.type = 'sine'; break;
+                case 'Disco': oscillator.frequency.setValueAtTime(330, audioContext.currentTime); oscillator.type = 'triangle'; break;
+                case 'Reggae': oscillator.frequency.setValueAtTime(180, audioContext.currentTime); oscillator.type = 'square'; break;
+                default: oscillator.frequency.setValueAtTime(250, audioContext.currentTime); oscillator.type = 'sine';
+            }
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1);
+        }
+
+        function searchByGenre(genre) {
+            if (genre) alert(`Recherche par genre: ${genre}`);
+        }
+
+        function searchByCity(city) {
+            if (city) alert(`Recherche par ville: ${city}`);
+        }
+
+        function toggleLang() {
+            document.getElementById('langDropdown').classList.toggle('show');
+        }
+
+        function changeLang(lang, flag) {
+            document.getElementById('currentFlag').textContent = flag;
+            document.getElementById('langDropdown').classList.remove('show');
+            const t = translations[lang];
+            document.getElementById('welcomeText').textContent = t.welcome;
+            document.getElementById('descText').textContent = t.description;
+            document.getElementById('listenText').textContent = t.listen;
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.lang-btn') && !event.target.matches('.lang-btn *')) {
+                document.getElementById('langDropdown').classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
+✅ ENSUITE :
+1. Commit message : Complete Club2Stream HTML app with logo, search, sounds, multilang
+
+2. Cliquez "Commit changes"
+
+3. Dites-moi "Code ajouté" !
+
+Puis on passe à Netlify Drop ! 🚀
+
+Oct 2, 01:06 PM
+
+Copy
+Robot
+The agent is approaching its context limit. To keep the conversation going and avoid losing progress, please summarize the session and save your work.
+
+Agent context used
+Summarize & continue in a fresh session
+Continue your work in a new conversation while keeping the important context from this session, perfect for continuing complex projects without losing progress.
+Fork SessionFork
+Learn more about ForkingQuestion
+
+Save Work
+
+
+Learn How to Clear Memory
+
+Oct 2, 01:06 PM
+
+Copy
+Scroll to bottom
+Agent is waiting...
